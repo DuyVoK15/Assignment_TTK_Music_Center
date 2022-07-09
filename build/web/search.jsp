@@ -41,7 +41,8 @@
                     <th scope="col">End date</th>
                     <th scope="col">Category</th>
                     <th scope="col">Status</th>
-                    <th scope="col">Quantity</th>                   
+                    <th scope="col">Quantity</th> 
+                    <%if(!isAdmin){ %><th scope="col">Action</th>  <%}%>
                 </tr>
             </thead>
 
@@ -50,7 +51,7 @@
                     int count = 0;
                     for (CoursesDTO dto : list) {
                 %>              
-           
+
                 <tr>
                     <th scope="row"><%= ++count%></th>
                     <td><%= dto.getName()%></td>
@@ -71,9 +72,10 @@
                         %>
                         <%= status%>
                     </td>
-                    <td><%= dto.getQuantity()%></th>                       
+                    <td><%= dto.getQuantity()%></th>  
+                    <%if(!isAdmin){ %><td> <a class="btn btn-primary" href="MainController?btAction=AddS&codeS=<%=dto.getID()%>">Add to cart</a> </td><%}%>
                 </tr>
-                
+
                 <%
                     }
                 %>
@@ -84,7 +86,7 @@
         %>
         <h1>No match record!</h1>
         <%
-                }
+            }
         %>
         <!--        <a href="index.jsp">Back</a>-->
 

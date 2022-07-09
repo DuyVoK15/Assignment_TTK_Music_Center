@@ -93,10 +93,10 @@ public class CoursesDAO {
             //2. Create SQL string
             String sql = "SELECT * FROM [dbo].[duyvt.se150730.Courses]\n"                   
                     + "ORDER BY startDate\n"
-                    + "OFFSET ? ROWS FETCH NEXT 2 ROWS ONLY;";
+                    + "OFFSET ? ROWS FETCH NEXT 4 ROWS ONLY;";
             //3. Create repare statement
             stm = con.prepareStatement(sql);
-            stm.setInt(1, (index - 1) * 2);
+            stm.setInt(1, (index - 1) * 4);
             //4. Execute query
             rs = stm.executeQuery();
             while (rs.next()) {
@@ -138,13 +138,15 @@ public class CoursesDAO {
             //1. Open connection
             con = DBUtils.makeConnection();
             //2. Create SQL string
-            String sql = "SELECT ID, name, imgPath, description, tuitionFee, startDate, endDate, category, status, quantity\n"
+            String sql = "SELECT TOP(20) ID, name, imgPath, description, tuitionFee, startDate, endDate, category, status, quantity\n"
                     + "FROM [dbo].[duyvt.se150730.Courses]\n";
 
             if (searchBy.equalsIgnoreCase("byName")) {
-                sql = sql + "WHERE name LIKE ? AND status = 1 AND quantity > 0";
+                sql = sql + "WHERE name LIKE ? AND status = 1 AND quantity > 0\n"
+                        + "ORDER BY startDate";
             } else {
-                sql = sql + "WHERE category LIKE ? AND status = 1 AND quantity > 0";
+                sql = sql + "WHERE category LIKE ? AND status = 1 AND quantity > 0\n"
+                        + "ORDER BY startDate";
             }
             //3. Create repare statement
             stm = con.prepareStatement(sql);
@@ -324,6 +326,51 @@ public class CoursesDAO {
         return false;
 
     }
+    
+    public CoursesDTO findCourseID(int ID) throws SQLException, NamingException {
+        CoursesDTO dto = null;
+        Connection con = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+        try {
+            //1. Open connection
+            con = DBUtils.makeConnection();
+            //2. Create SQL string
+            String sql = "SELECT ID, name, imgPath, description, tuitionFee, startDate, endDate, category, status, quantity\n"
+                    + "FROM [dbo].[duyvt.se150730.Courses]\n"
+                    + "WHERE ID = ?";
 
+            
+            //3. Create repare statement
+            stm = con.prepareStatement(sql);
+            stm.setInt(1, ID);
+            rs = stm.executeQuery();
+            while (rs.next()) {
+                int cID = rs.getInt("ID");
+                String name = rs.getString("name");
+                String imgPath = rs.getString("imgPath");
+                String description = rs.getString("description");
+                int tuitionFee = rs.getInt("tuitionFee");
+                Date startDate = rs.getDate("startDate");
+                Date endDate = rs.getDate("endDate");
+                String category = rs.getString("category");
+                boolean status = rs.getBoolean("status");
+                int quantity = rs.getInt("quantity");
+                dto = new CoursesDTO(ID, name, imgPath, description, tuitionFee, startDate, endDate, category, status, quantity);
+                return dto;
+            }
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+        return dto;
+    }
     
 }

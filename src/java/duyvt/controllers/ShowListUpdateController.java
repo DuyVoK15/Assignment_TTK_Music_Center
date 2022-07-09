@@ -56,11 +56,12 @@ public class ShowListUpdateController extends HttpServlet {
             session.setAttribute("i", index);
             
             
-            int count = dao.getTotalCoursesManage();
-            int endPage = count/2;
-            if(count % 2 != 0){
-                endPage++;
-            }
+//            int count = dao.getTotalCoursesManage();
+//            int endPage = count/2;
+//            if(count % 2 != 0){
+//                endPage++;
+//            }
+            int endPage = 5;
             List<CoursesDTO> list = dao.manageViewCourses(index);
             
             request.setAttribute("listAU", list);

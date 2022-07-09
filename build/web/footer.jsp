@@ -16,8 +16,8 @@
     <body>
         <footer style="position: sticky;
 
-                top: 100%;
-
+                bottom:0;
+                width: 100%;
                 background: #2c3e50;
 
                 text-align: center;

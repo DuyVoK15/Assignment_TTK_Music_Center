@@ -116,6 +116,9 @@ public class CoursesDTO {
         this.quantity = quantity;
     }
 
+    public CoursesDTO() {
+    }
+
     
     
     

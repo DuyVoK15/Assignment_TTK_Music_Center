@@ -8,11 +8,10 @@ package duyvt.controllers;
 import duyvt.DAO.CoursesDAO;
 import duyvt.DTO.CartDTO;
 import duyvt.DTO.CoursesDTO;
-import static java.awt.SystemColor.text;
+import static duyvt.controllers.AddCoursesToCartController.listCart;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,9 +26,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author ASUS
  */
-public class AddCoursesToCartController extends HttpServlet {
-
-    public static List<CartDTO> listCart = new ArrayList<>();
+public class AddWithSearchController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -43,6 +40,24 @@ public class AddCoursesToCartController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException, NamingException {
         response.setContentType("text/html;charset=UTF-8");
+//        CoursesDTO dto = new CoursesDTO();
+//        CoursesDAO dao = new CoursesDAO();
+//        CartDTO cart = new CartDTO();
+//        String indexPage = request.getParameter("Index");
+//            if(indexPage == null){
+//                indexPage = "1";
+//            }
+//            int index = Integer.parseInt(indexPage);
+//        int codeS = Integer.parseInt(request.getParameter("codeS"));
+//        dto = dao.findCourseID(codeS);
+//        
+//        if (dto != null) {
+//            cart.setCourses(dto);
+//            cart.setQuantity(1);
+//           
+//            listCart.add(cart);
+//        }
+        String s = "";
         try (PrintWriter out = response.getWriter()) {
             CoursesDTO dto = null;
             CoursesDAO dao = new CoursesDAO();
@@ -52,18 +67,18 @@ public class AddCoursesToCartController extends HttpServlet {
 //            indexPage = "1";
 //        }
 //        int index = Integer.parseInt(indexPage);
-            int code = Integer.parseInt(request.getParameter("code"));
+            int code = Integer.parseInt(request.getParameter("codeS"));
             dto = dao.findCourseID(code);
             HttpSession session = request.getSession();
             List<CartDTO> listCartSession = (List<CartDTO>) session.getAttribute("listCartSession");
 
             cart.setCourses(dto);
             cart.setQuantity(1);
-            
+
             if (listCartSession == null) {
                 listCart.add(cart);
                 session.setAttribute("listCartSession", listCart);
-                response.sendRedirect("MainController?btAction=Courses");
+                response.sendRedirect("MainController?btAction=Search&txtSearch="+s+"&searchBy=byName");
             } else {
                 listCart = listCartSession;
                 boolean exist = false;
@@ -72,15 +87,15 @@ public class AddCoursesToCartController extends HttpServlet {
                         int quantity = c.getQuantity();
                         c.setQuantity(quantity+1);
                         exist = true;
-                        response.sendRedirect("MainController?btAction=Courses");
+                        response.sendRedirect("MainController?btAction=Search&txtSearch="+s+"&searchBy=byName");
                         //out.print("<h3 style='color: crimson; text-align: center;'>Item already exist in Cart. Please check your Cart <a href='MainController?btAction=ViewCart'>here</a><h3> ");
                     }
                     
                 }
                 if (!exist) {
-                        listCart.add(cart);
-                        response.sendRedirect("MainController?btAction=Courses");
-                    }
+                    listCart.add(cart);
+                    response.sendRedirect("MainController?btAction=Search&txtSearch="+s+"&searchBy=byName");
+                }
             }
         }
     }
@@ -100,9 +115,9 @@ public class AddCoursesToCartController extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (SQLException ex) {
-            Logger.getLogger(AddCoursesToCartController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AddWithSearchController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NamingException ex) {
-            Logger.getLogger(AddCoursesToCartController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AddWithSearchController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -120,9 +135,9 @@ public class AddCoursesToCartController extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (SQLException ex) {
-            Logger.getLogger(AddCoursesToCartController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AddWithSearchController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NamingException ex) {
-            Logger.getLogger(AddCoursesToCartController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AddWithSearchController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

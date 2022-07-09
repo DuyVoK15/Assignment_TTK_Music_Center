@@ -5,15 +5,17 @@
  */
 package duyvt.controllers;
 
-import duyvt.DAO.AccountsDAO;
-import duyvt.DTO.AccountsDTO;
+import duyvt.DAO.CoursesDAO;
+import duyvt.DTO.CartDTO;
+import duyvt.DTO.CoursesDTO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.naming.NamingException;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,10 +25,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author ASUS
  */
-public class LoginController extends HttpServlet {
-
-    private String INDEXPAGE = "index.jsp";
-    private String ERRORPAGE = "errorLogin.html";
+public class UpdateQuantityItemController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,38 +37,26 @@ public class LoginController extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, SQLException, NamingException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            String userID = request.getParameter("txtUserID").trim();
-            String password = request.getParameter("txtPassword").trim();
-            String url = ERRORPAGE;
-            AccountsDAO dao = new AccountsDAO();
-            boolean result = dao.checkLogin(userID, password);
-            boolean checkHaveLogin = result;
-            HttpSession session = request.getSession(true);
-            if (result) {
-                AccountsDTO acc = dao.getAccounts();
-                
-                session.setAttribute("u", acc.getUserID());
-                session.setAttribute("p", acc.getPassword());
-                session.setAttribute("isAdminResult", acc.isIsAdmin());
-                
-                url = INDEXPAGE;
-                Cookie cookie = new Cookie(userID, password);
-                cookie.setMaxAge(60 * 3);
-                response.addCookie(cookie);
+            int quantity = Integer.parseInt(request.getParameter("txtQuantityItem"));
+            int codeU = Integer.parseInt(request.getParameter("idid"));
+            HttpSession session = request.getSession();
+            List<CartDTO> listCartSession = (List<CartDTO>) session.getAttribute("listCartSession");
 
+            CoursesDTO dto = null;
+            CoursesDAO dao = new CoursesDAO();
+
+            for (CartDTO c : listCartSession) {
+                if (c.getCourses().getID() == codeU) {
+                    c.setQuantity(quantity);
+                }
             }
-            session.setAttribute("haveLogin", checkHaveLogin);
-            response.sendRedirect(url);
-
-        } catch (SQLException ex) {
-            response.sendRedirect("errorLogin.html");
-        } catch (NamingException e) {
-            e.printStackTrace();
-        }
+            if (listCartSession != null) {
+                response.sendRedirect("MainController?btAction=ViewCart");
+            }
+        } 
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -84,7 +71,13 @@ public class LoginController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (SQLException ex) {
+            Logger.getLogger(UpdateQuantityItemController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NamingException ex) {
+            Logger.getLogger(UpdateQuantityItemController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -98,7 +91,13 @@ public class LoginController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (SQLException ex) {
+            Logger.getLogger(UpdateQuantityItemController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NamingException ex) {
+            Logger.getLogger(UpdateQuantityItemController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**

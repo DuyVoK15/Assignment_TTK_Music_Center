@@ -40,6 +40,26 @@
         <servlet-name>AddCoursesToCartController</servlet-name>
         <servlet-class>duyvt.controllers.AddCoursesToCartController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ViewCartController</servlet-name>
+        <servlet-class>duyvt.controllers.ViewCartController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeleteCartController</servlet-name>
+        <servlet-class>duyvt.controllers.DeleteCartController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddWithSearchController</servlet-name>
+        <servlet-class>duyvt.controllers.AddWithSearchController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdateQuantityItemController</servlet-name>
+        <servlet-class>duyvt.controllers.UpdateQuantityItemController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ConfirmController</servlet-name>
+        <servlet-class>duyvt.controllers.ConfirmController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>MainController</servlet-name>
         <url-pattern>/MainController</url-pattern>
@@ -79,6 +99,26 @@
     <servlet-mapping>
         <servlet-name>AddCoursesToCartController</servlet-name>
         <url-pattern>/AddCoursesToCartController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewCartController</servlet-name>
+        <url-pattern>/ViewCartController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteCartController</servlet-name>
+        <url-pattern>/DeleteCartController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddWithSearchController</servlet-name>
+        <url-pattern>/AddWithSearchController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateQuantityItemController</servlet-name>
+        <url-pattern>/UpdateQuantityItemController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ConfirmController</servlet-name>
+        <url-pattern>/ConfirmController</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

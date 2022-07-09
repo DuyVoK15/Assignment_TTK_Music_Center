@@ -78,6 +78,14 @@ public class UpdateController extends HttpServlet {
             session.setAttribute("date", date);
             response.sendRedirect(url);
             
+        } catch (SQLException e){
+            response.sendRedirect("errorUpdate.html");
+        } catch (ParseException e){
+            response.sendRedirect("errorUpdate.html");
+        } catch (NamingException e){
+            response.sendRedirect("errorUpdate.html");
+        } catch (NumberFormatException e){
+            response.sendRedirect("errorUpdate.html");
         }
     }
 

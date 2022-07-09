@@ -31,6 +31,11 @@ public class MainController extends HttpServlet {
     private String UPDATECONTROLLER = "UpdateController";
     private String CREATECONTROLLER = "CreateController";
     private String ADDCOURSESTOCARDCONTROLLER = "AddCoursesToCartController";
+    private String ADDWITHSEARCHCONTROLLER = "AddWithSearchController";
+    private String VIEWCARTCONTROLLER = "ViewCartController";
+    private String DELETECARTCONTROLLER = "DeleteCartController";
+    private String UPDATEQUANTITYITEMCONTROLLER = "UpdateQuantityItemController";
+    private String CONFIRMCONTROLLER = "ConfirmController";
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -47,14 +52,9 @@ public class MainController extends HttpServlet {
             /* TODO output your page here. You may use following sample code. */
             String button = request.getParameter("btAction");
             String url = INDEXPAGE;
-            
-            
-            
-                       
-                        
-            
+
             if (button == null) {
-                
+
             } else if (button.equals("Login")) {
                 url = LOGINCONTROLLER;
             } else if (button.equals("Logout")) {
@@ -69,8 +69,18 @@ public class MainController extends HttpServlet {
                 url = UPDATECONTROLLER;
             } else if (button.equals("Create")) {
                 url = CREATECONTROLLER;
-            } else if (button.equals("Add to cart")) {
+            } else if (button.equals("Add")) {
                 url = ADDCOURSESTOCARDCONTROLLER;
+            } else if (button.equals("ViewCart")) {
+                url = VIEWCARTCONTROLLER;
+            } else if (button.equals("DeleteCart")) {
+                url = DELETECARTCONTROLLER;
+            } else if (button.equals("AddS")) {
+                url = ADDWITHSEARCHCONTROLLER;
+            } else if (button.equals("UpdateItemQuantity")) {
+                url = UPDATEQUANTITYITEMCONTROLLER;
+            }else if (button.equals("Confirm")) {
+                url = CONFIRMCONTROLLER;
             }
             RequestDispatcher rd = request.getRequestDispatcher(url);
             rd.forward(request, response);

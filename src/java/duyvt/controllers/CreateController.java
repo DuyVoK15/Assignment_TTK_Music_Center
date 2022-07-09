@@ -25,7 +25,10 @@ import javax.servlet.http.HttpServletResponse;
  * @author ASUS
  */
 public class CreateController extends HttpServlet {
+
     private SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+    private String UPDATEPAGE = "MainController?btAction=CoursesUpdate";
+    private String ERRORCREATE = "errorCreate.html";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,25 +42,35 @@ public class CreateController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ParseException, SQLException, NamingException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            int ID = Integer.parseInt(request.getParameter("ctxtID"));
-            String name = request.getParameter("ctxtName");
-            String imgPath = request.getParameter("ctxtImgPath");
-            String description = request.getParameter("ctxtDescription");
-            int tuitionFee = Integer.parseInt(request.getParameter("ctxtTuitionFee"));
-            Date startDate =  formatter.parse(request.getParameter("ctxtStartDate"));
-            Date endDate =  formatter.parse(request.getParameter("ctxtEndDate"));
-            String category = request.getParameter("ctxtCategory");
-            boolean statusStr = Boolean.parseBoolean(request.getParameter("ctxtStatus"));
-            int quantity = Integer.parseInt(request.getParameter("ctxtQuantity"));
+        int ID = Integer.parseInt(request.getParameter("ctxtID"));
+        String name = request.getParameter("ctxtName");
+        String imgPath = request.getParameter("ctxtImgPath");
+        String description = request.getParameter("ctxtDescription");
+        int tuitionFee = Integer.parseInt(request.getParameter("ctxtTuitionFee"));
+        Date startDate = formatter.parse(request.getParameter("ctxtStartDate"));
+        Date endDate = formatter.parse(request.getParameter("ctxtEndDate"));
+        String category = request.getParameter("ctxtCategory");
+        boolean statusStr = Boolean.parseBoolean(request.getParameter("ctxtStatus"));
+        int quantity = Integer.parseInt(request.getParameter("ctxtQuantity"));
+
+        String url = ERRORCREATE;
+
+        try {
+
             CoursesDAO dao = new CoursesDAO();
             boolean result = dao.createCourses(ID, name, imgPath, description, tuitionFee, startDate, endDate, category, statusStr, quantity);
-            if(result){
-                response.sendRedirect("MainController?btAction=CoursesUpdate");
-            } else {
-                response.sendRedirect("errorCreate.html");
+            if (result) {
+                url = UPDATEPAGE;
             }
-        } 
+        } catch (NamingException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (NumberFormatException e){
+            response.sendRedirect(ERRORCREATE);
+        } finally {
+            response.sendRedirect(url);
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

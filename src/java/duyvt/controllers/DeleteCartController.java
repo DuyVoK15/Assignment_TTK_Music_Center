@@ -5,15 +5,11 @@
  */
 package duyvt.controllers;
 
-import duyvt.DAO.AccountsDAO;
-import duyvt.DTO.AccountsDTO;
+import duyvt.DTO.CartDTO;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.SQLException;
 import java.util.List;
-import javax.naming.NamingException;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,10 +19,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author ASUS
  */
-public class LoginController extends HttpServlet {
-
-    private String INDEXPAGE = "index.jsp";
-    private String ERRORPAGE = "errorLogin.html";
+public class DeleteCartController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,36 +33,11 @@ public class LoginController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            String userID = request.getParameter("txtUserID").trim();
-            String password = request.getParameter("txtPassword").trim();
-            String url = ERRORPAGE;
-            AccountsDAO dao = new AccountsDAO();
-            boolean result = dao.checkLogin(userID, password);
-            boolean checkHaveLogin = result;
-            HttpSession session = request.getSession(true);
-            if (result) {
-                AccountsDTO acc = dao.getAccounts();
-                
-                session.setAttribute("u", acc.getUserID());
-                session.setAttribute("p", acc.getPassword());
-                session.setAttribute("isAdminResult", acc.isIsAdmin());
-                
-                url = INDEXPAGE;
-                Cookie cookie = new Cookie(userID, password);
-                cookie.setMaxAge(60 * 3);
-                response.addCookie(cookie);
-
-            }
-            session.setAttribute("haveLogin", checkHaveLogin);
-            response.sendRedirect(url);
-
-        } catch (SQLException ex) {
-            response.sendRedirect("errorLogin.html");
-        } catch (NamingException e) {
-            e.printStackTrace();
-        }
+        int code = Integer.parseInt(request.getParameter("deleteID"));
+        HttpSession session = request.getSession();
+        List<CartDTO> list =(List<CartDTO>) session.getAttribute("listCartSession");
+        list.remove(code);
+        response.sendRedirect("MainController?btAction=ViewCart");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

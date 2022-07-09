@@ -22,6 +22,8 @@
         <%            List<CoursesDTO> list = (List<CoursesDTO>) request.getAttribute("listA");
             int indexP = (int) request.getAttribute("indexP");
             int endP = (int) request.getAttribute("endP");
+            int in = (int) session.getAttribute("in");
+            %><h4>You are on page: <%= in%></h4><%
             if (list != null) {
         %>
         <table class="table">
@@ -52,7 +54,7 @@
                     <th scope="row"><%=dto.getName()%></th>
                     <td><img style='width: 200px; height: 200px;' src="<%= dto.getImgPath()%>"/></td>
                     <td><%= dto.getDescription()%></td>
-                    <td><%= dto.getTuitionFee()%></td>
+                    <td>$ <%= dto.getTuitionFee()%></td>
                     <td><%= dto.getStartDate()%></td>
                     <td><%= dto.getEndDate()%></td>
                     <td><%= dto.getCategory()%></td>
@@ -66,7 +68,7 @@
                         %>
                     </td>
                     <td><%= dto.getQuantity()%></td>
-                    <td> <input type="submit" name="btAction" value="Add to cart" /> </td>
+                    <td> <a class="btn btn-primary" href="MainController?btAction=Add&code=<%=dto.getID()%>">Add to cart</a> </td>
                 </tr>
             </form>
             <%}%>

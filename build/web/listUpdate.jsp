@@ -24,7 +24,7 @@
                 int i = (int) session.getAttribute("i");
                 Date s = (Date) session.getAttribute("date");
                 String u = (String) session.getAttribute("u");
-
+        %><h4>You are on page: <%= i%></h4><%
                 int endPU = (int) request.getAttribute("endPU");
                 List<CoursesDTO> list = (List<CoursesDTO>) request.getAttribute("listAU");
                 if (list != null) {
@@ -60,7 +60,7 @@
 
                         <th scope="row" style="padding: "><input type="hidden" name="txtID" value="<%= dto.getID()%>" /> <%= dto.getID()%></th>
                         <td><input type="text" name="txtName" value="<%= dto.getName()%>" /></td>
-                        <td><input type="text" name="txtImgPath" value="<%= dto.getImgPath()%>" /><img style='width: 200px; height: 200px;' src="<%= dto.getImgPath()%>"/></td>
+                        <td><input type="text" name="txtImgPath" value="<%= dto.getImgPath()%>" /><img style='width: 50px; height: 50px;' src="<%= dto.getImgPath()%>"/></td>
                         <td><input type="text" name="txtDescription" value="<%= dto.getDescription()%>" /></td>
                         <td><input type="text" name="txtTuitionFee" value="<%= dto.getTuitionFee()%>" /></td>
                         <td><input type="text" name="txtStartDate" value="<%= dto.getStartDate()%>" /></td>
