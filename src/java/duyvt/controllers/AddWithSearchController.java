@@ -57,7 +57,7 @@ public class AddWithSearchController extends HttpServlet {
 //           
 //            listCart.add(cart);
 //        }
-        String s = "";
+        
         try (PrintWriter out = response.getWriter()) {
             CoursesDTO dto = null;
             CoursesDAO dao = new CoursesDAO();
@@ -71,14 +71,16 @@ public class AddWithSearchController extends HttpServlet {
             dto = dao.findCourseID(code);
             HttpSession session = request.getSession();
             List<CartDTO> listCartSession = (List<CartDTO>) session.getAttribute("listCartSession");
-
+            int index = (int) session.getAttribute("indexSearchSession");
+            String textSearch = (String) session.getAttribute("textSearchSession");
+            String searchBy = (String) session.getAttribute("searchBySession");
             cart.setCourses(dto);
             cart.setQuantity(1);
 
             if (listCartSession == null) {
                 listCart.add(cart);
                 session.setAttribute("listCartSession", listCart);
-                response.sendRedirect("MainController?btAction=Search&txtSearch="+s+"&searchBy=byName");
+                response.sendRedirect("MainController?btAction=Search&searchBy="+searchBy+"&txtSearch="+textSearch+"&IndexS="+index);
             } else {
                 listCart = listCartSession;
                 boolean exist = false;
@@ -87,14 +89,14 @@ public class AddWithSearchController extends HttpServlet {
                         int quantity = c.getQuantity();
                         c.setQuantity(quantity+1);
                         exist = true;
-                        response.sendRedirect("MainController?btAction=Search&txtSearch="+s+"&searchBy=byName");
+                        response.sendRedirect("MainController?btAction=Search&searchBy="+searchBy+"&txtSearch="+textSearch+"&IndexS="+index);
                         //out.print("<h3 style='color: crimson; text-align: center;'>Item already exist in Cart. Please check your Cart <a href='MainController?btAction=ViewCart'>here</a><h3> ");
                     }
                     
                 }
                 if (!exist) {
                     listCart.add(cart);
-                    response.sendRedirect("MainController?btAction=Search&txtSearch="+s+"&searchBy=byName");
+                    response.sendRedirect("MainController?btAction=Search&searchBy="+searchBy+"&txtSearch="+textSearch+"&IndexS="+index);
                 }
             }
         }

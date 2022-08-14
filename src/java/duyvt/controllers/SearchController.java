@@ -44,11 +44,29 @@ public class SearchController extends HttpServlet {
 //            String password = request.getParameter("txtPassword");       
         String textSearch = request.getParameter("txtSearch");
         String searchBy = request.getParameter("searchBy");
-
-        CoursesDAO dao = new CoursesDAO();
-        dao.searchCourses(textSearch, searchBy);
-        List<CoursesDTO> list = dao.getListCourses();
-
+        String indexPage = request.getParameter("IndexS");
+            if(indexPage == null){
+                indexPage = "1";
+            }
+            int index = Integer.parseInt(indexPage);
+              
+            CoursesDAO dao = new CoursesDAO();   
+            
+            int count = dao.getTotalCoursesSearch(textSearch, searchBy);
+            int endPage = count/4;
+            if(count % 4 != 0){
+                endPage++;
+            }
+        
+        List<CoursesDTO> list = dao.searchCourses(textSearch, searchBy, index);
+        
+        HttpSession session = request.getSession();
+        session.setAttribute("indexSearchSession", index);
+        session.setAttribute("textSearchSession", textSearch);
+        session.setAttribute("searchBySession", searchBy);
+        request.setAttribute("endS", endPage);
+        request.setAttribute("indexS", index);
+        request.setAttribute("textS", textSearch);
         request.setAttribute("a", searchBy);
         request.setAttribute("coursesList", list);
         request.getRequestDispatcher("search.jsp").forward(request, response);

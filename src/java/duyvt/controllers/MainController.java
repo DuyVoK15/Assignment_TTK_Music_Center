@@ -36,6 +36,8 @@ public class MainController extends HttpServlet {
     private String DELETECARTCONTROLLER = "DeleteCartController";
     private String UPDATEQUANTITYITEMCONTROLLER = "UpdateQuantityItemController";
     private String CONFIRMCONTROLLER = "ConfirmController";
+    private String VIEWORDERCONTROLLER = "ViewOrderController";
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -79,8 +81,10 @@ public class MainController extends HttpServlet {
                 url = ADDWITHSEARCHCONTROLLER;
             } else if (button.equals("UpdateItemQuantity")) {
                 url = UPDATEQUANTITYITEMCONTROLLER;
-            }else if (button.equals("Confirm")) {
+            } else if (button.equals("Confirm")) {
                 url = CONFIRMCONTROLLER;
+            } else if (button.equals("ViewOrder")) {
+                url = VIEWORDERCONTROLLER;
             }
             RequestDispatcher rd = request.getRequestDispatcher(url);
             rd.forward(request, response);

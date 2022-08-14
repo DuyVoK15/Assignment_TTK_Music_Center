@@ -47,12 +47,12 @@ public class ListController extends HttpServlet {
             CoursesDAO dao = new CoursesDAO();
             HttpSession session = request.getSession();
             session.setAttribute("in", index);
-//            int count = dao.getTotalCoursesView();
-//            int endPage = count/4;
-//            if(count % 4 != 0){
-//                endPage++;
-//            }
-            int endPage = 5;
+            int count = dao.getTotalCoursesView();
+            int endPage = count/4;
+            if(count % 4 != 0){
+                endPage++;
+            }
+//            int endPage = 5;
             List<CoursesDTO> list = dao.readCourses(index);
             
             request.setAttribute("indexP", index);

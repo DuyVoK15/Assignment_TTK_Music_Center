@@ -15,7 +15,7 @@
     </head>
     <body>
         <%@include file="header.jsp" %>
-        <%            String username = "";
+<%--        <%            String username = "";
             Cookie[] cookies = request.getCookies();
             if (cookies != null) {
                 for (Cookie cookie : cookies) {
@@ -34,7 +34,7 @@
 //                    <font color="red">You haven't logged in!</font>
                 }
             }
-        %>
+        %>   --%>
         <div class="container" style="margin-top: 40px">
             <div class="row">
                 <div class="col-sm-6" style="text-align: center;">

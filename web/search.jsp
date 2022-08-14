@@ -8,6 +8,8 @@
 <%@page import="java.util.List"%>
 <%@page import="duyvt.DTO.CoursesDTO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -21,13 +23,18 @@
 
         <%            // get isAdmin = ?
             String s = (String) request.getAttribute("a");
+            String textS = (String) request.getAttribute("textS");
+            int indexS = (int) request.getAttribute("indexS");
+            int endS = (int) request.getAttribute("endS");
+            %><h4>You are on page: <%= indexS%></h4><%
         %>
         <h1>Courses</h1>
+        
         <div>Search: <%= s%></div>
         <%
-            String searchValue = request.getParameter("txtSearch");
+//            String searchValue = request.getParameter("txtSearch");
             List<CoursesDTO> list = (List<CoursesDTO>) request.getAttribute("coursesList");
-            if (list != null) {
+            if (list != null || textS != null) {
         %>
         <table class="table">
             <thead>
@@ -81,6 +88,28 @@
                 %>
             </tbody>
         </table>
+            <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            <%
+                if (indexS > 1) {
+            %><li class="page-item"><a class="page-link" href="MainController?btAction=Search&searchBy=${a}&txtSearch=${textS}&IndexS=${indexS-1}">Previous</a></li><%
+                }
+                %>
+
+            <c:forEach begin="1" end="${endS}" var="i">
+
+                <li class="page-item"><a class="page-link" href="MainController?btAction=Search&searchBy=${a}&txtSearch=${textS}&IndexS=${i}">${i}</a></li>
+
+
+            </c:forEach>
+            <%
+                if (indexS < endS) {
+            %><li class="page-item"><a class="page-link" href="MainController?btAction=Search&searchBy=${a}&txtSearch=${textS}&IndexS=${indexS+1}">Next</a></li><%
+                }
+                %>
+
+        </ul>
+    </nav>
         <%
         } else {
         %>

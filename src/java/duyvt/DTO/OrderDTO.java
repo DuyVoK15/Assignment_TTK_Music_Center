@@ -14,6 +14,7 @@ import java.util.Date;
 public class OrderDTO extends CoursesDTO{   
     private int orderID;
     private String userID;
+    private int courseID;
     private Date date;
     private int quantity;
     private double total;
@@ -21,14 +22,16 @@ public class OrderDTO extends CoursesDTO{
     public OrderDTO() {
     }
 
-    public OrderDTO(CoursesDTO courses, int orderID, String userID, Date date, int quantity, double total) {       
+    public OrderDTO(int orderID, String userID, int courseID, Date date, int quantity, double total) {
         this.orderID = orderID;
         this.userID = userID;
+        this.courseID = courseID;
         this.date = date;
         this.quantity = quantity;
         this.total = total;
     }
 
+    
 
     public int getOrderID() {
         return orderID;
@@ -68,6 +71,14 @@ public class OrderDTO extends CoursesDTO{
 
     public void setTotal(double total) {
         this.total = total;
+    }
+
+    public int getCourseID() {
+        return courseID;
+    }
+
+    public void setCourseID(int courseID) {
+        this.courseID = courseID;
     }
     
     

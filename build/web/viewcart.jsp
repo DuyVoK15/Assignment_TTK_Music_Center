@@ -18,18 +18,16 @@
     </head>
     <body>
         <%@include file="header.jsp" %>
-        <%
-            double sum = 0;
-            double sumTotal = 0;
-            double discount = 0;
-            List<CartDTO> listCartSession = null;
-            if (session.getAttribute("listCartSession") != null) {
-                listCartSession = (List<CartDTO>) session.getAttribute("listCartSession");
-            }
-            if (listCartSession != null) {
-                sum = (double) session.getAttribute("sum");
-                discount = (double) session.getAttribute("discount");
+        <%            if (!isAdmin) {
+                double sumTotal = 0;
                 sumTotal = (double) session.getAttribute("sumTotal");
+                List<CartDTO> listCartSession = null;
+                if (session.getAttribute("listCartSession") != null) {
+                    listCartSession = (List<CartDTO>) session.getAttribute("listCartSession");
+                }
+                if (listCartSession == null || listCartSession.isEmpty()) {
+        %><h2>NO ITEMs. Let buy something! <a href="MainController?btAction=Courses">here</a></h2><%
+                    }
 
         %>       
         <div class="container px-3 my-5 clearfix">
@@ -51,8 +49,9 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <%                    for (int i = 0; i < listCartSession.size(); i++) {
-                                        CartDTO dto = listCartSession.get(i);
+                                <%  if (listCartSession != null) {
+                                        for (int i = 0; i < listCartSession.size(); i++) {
+                                            CartDTO dto = listCartSession.get(i);
                                 %>
 
 
@@ -69,28 +68,24 @@
                             <td class="align-middle p-4"><%= dto.getCourses().getTuitionFee()%></td>           
                             <td class="align-middle p-4"><a onclick="return confirm('Are you sure to delete this item?')" class="btn btn-primary" href="MainController?btAction=DeleteCart&deleteID=<%=i%>">Delete</a></td>
                             </tr>
-                            <%}%>
+                            <%}
+                                }%>
                             </tbody>
                         </table>
+
                     </div>
                     <!-- / Shopping cart table -->
                     <div class="d-flex flex-wrap justify-content-between align-items-center pb-4">
                         <div class="mt-4">
-                            <label class="text-muted font-weight-normal">Promocode</label>
-                            <input type="text" placeholder="ABC" class="form-control">
+                            <input class="form-control" type="radio" name="cashPayment" checked="checked">
+                            <label class="text-muted font-weight-normal">Cash payment</label>
+                            
                         </div>
-                        <div class="d-flex">
-                            <div class="text-right mt-4 mr-5">
-                                <label class="text-muted font-weight-normal m-0">Price</label>
-                                <div class="text-large"><strong>$ <%=sumTotal%></strong></div>
-                            </div>
-                            <div class="text-right mt-4 mr-5">
-                                <label class="text-muted font-weight-normal m-0">Discount</label>
-                                <div class="text-large"><strong>$ <%=discount%></strong></div>
-                            </div>
+                        
+                        <div class="d-flex">                            
                             <div class="text-right mt-4">
                                 <label class="text-light bg-dark font-weight-bold m-0">Total price</label>
-                                <div class="text-large"><strong><h3>$ <%=sum%></h3></strong></div>
+                                <div class="text-large"><strong><h3>$ <%=sumTotal%></h3></strong></div>
                             </div>
 
                         </div>
@@ -99,15 +94,17 @@
                     <div class="float-right">
                         <a class="btn btn-lg btn-default md-btn-flat mt-2 mr-3" href="index.jsp">Home</a>
                         <a class="btn btn-lg btn-secondary md-btn-flat mt-2 mr-3" href="MainController?btAction=Courses">Back to shopping</a>
-                        <a class="btn btn-lg btn-primary mt-2" href="MainController?btAction=Confirm">Confirm</a>
+                        <a class="btn btn-lg btn-primary mt-2" onclick="return confirm('Are you sure to confirm this cart?')" href="MainController?btAction=Confirm">Confirm</a>
                     </div>
 
                 </div>
             </div>
         </div>
+
         <%} else {
-        %><h2>NO ITEM. Let buy something! <a href="MainController?btAction=Courses">here</a></h2><%
+        %><h1 style="color: red; text-align: center;">You can not do this function!</h1><%
     }%>
-<%@include file="footer.jsp" %>
+
+        <%@include file="footer.jsp" %>
     </body>
 </html>

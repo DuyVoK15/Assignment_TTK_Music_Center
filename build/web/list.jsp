@@ -3,6 +3,8 @@
     Created on : Jul 3, 2022, 2:38:49 PM
     Author     : ASUS
 --%>
+
+
 <%@page import="duyvt.DTO.CoursesDTO"%>
 <%@page import="java.util.List"%>
 <%@page import="java.util.List"%>
@@ -70,6 +72,7 @@
                     <td><%= dto.getQuantity()%></td>
                     <td> <a class="btn btn-primary" href="MainController?btAction=Add&code=<%=dto.getID()%>">Add to cart</a> </td>
                 </tr>
+                <input type="hidden" name="indexA" value="<%=indexP%>">
             </form>
             <%}%>
         </tbody>
@@ -97,7 +100,7 @@
 
         </ul>
     </nav>
-    <footer><%@include file="footer.jsp" %></footer>  
+    <%@include file="footer.jsp" %> 
 
 
 </body>

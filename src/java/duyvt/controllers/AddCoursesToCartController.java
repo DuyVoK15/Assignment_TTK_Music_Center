@@ -47,11 +47,8 @@ public class AddCoursesToCartController extends HttpServlet {
             CoursesDTO dto = null;
             CoursesDAO dao = new CoursesDAO();
             CartDTO cart = new CartDTO();
-//        String indexPage = request.getParameter("Index");
-//        if (indexPage == null) {
-//            indexPage = "1";
-//        }
-//        int index = Integer.parseInt(indexPage);
+        
+        int index =(int) request.getSession().getAttribute("in");
             int code = Integer.parseInt(request.getParameter("code"));
             dto = dao.findCourseID(code);
             HttpSession session = request.getSession();
@@ -63,7 +60,7 @@ public class AddCoursesToCartController extends HttpServlet {
             if (listCartSession == null) {
                 listCart.add(cart);
                 session.setAttribute("listCartSession", listCart);
-                response.sendRedirect("MainController?btAction=Courses");
+                response.sendRedirect("MainController?btAction=Courses&Index="+index);
             } else {
                 listCart = listCartSession;
                 boolean exist = false;
@@ -72,14 +69,14 @@ public class AddCoursesToCartController extends HttpServlet {
                         int quantity = c.getQuantity();
                         c.setQuantity(quantity+1);
                         exist = true;
-                        response.sendRedirect("MainController?btAction=Courses");
+                        response.sendRedirect("MainController?btAction=Courses&Index="+index);
                         //out.print("<h3 style='color: crimson; text-align: center;'>Item already exist in Cart. Please check your Cart <a href='MainController?btAction=ViewCart'>here</a><h3> ");
                     }
                     
                 }
                 if (!exist) {
                         listCart.add(cart);
-                        response.sendRedirect("MainController?btAction=Courses");
+                        response.sendRedirect("MainController?btAction=Courses&Index="+index);
                     }
             }
         }

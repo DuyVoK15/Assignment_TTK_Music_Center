@@ -16,12 +16,16 @@
     </head>
     <body>
         <%
-
+            boolean haveLogin = false;
+            if (session.getAttribute("haveLogin") != null) {
+                haveLogin = true;
+            }
             boolean isAdmin = false;
             if (session.getAttribute("isAdminResult") != null) {
                 isAdmin = (boolean) session.getAttribute("isAdminResult");
             }
             if (isAdmin) {
+                String fullname = (String) session.getAttribute("fullname");
         %>
         <!--ADMIN PAGE-->
         <header>
@@ -32,6 +36,8 @@
                     <li class="nav-item" style="margin-left: 30px"><a class="nav-link" href="login.jsp" ><h4>Login</h4></a></li>
                     <li class="nav-item" style="margin-left: 30px"><a class="nav-link"  href="MainController?btAction=CoursesUpdate" ><h4>Update courses</h4></a></li>
                     <li class="nav-item" style="margin-left: 30px"><a class="nav-link"  href="listCreate.jsp"><h4>Create courses</h4></a></li>
+                    <li class="nav-item" style="margin-left: 30px"><a class="nav-link" href="MainController?btAction=ViewOrder" ><h4>Order</h4></a></li> 
+                    <li class="nav-item" style="margin-left: 30px"><h4 class="nav-link">Welcome, <%=fullname%> | </h4></li>
                     <li class="nav-item" style="margin-left: 30px"><a class="nav-link"  href="MainController?btAction=Logout"><h4>Logout</h4></a></li>
                 </ul>
                 <form class="form-inline" action="MainController" method="POST" class="formsearch">
@@ -48,7 +54,7 @@
         <%
         } else {
             List<CartDTO> listCartSession = null;
-
+            String fullname = (String) session.getAttribute("fullname");
         %>
 
         <!--User and no login page-->
@@ -60,26 +66,24 @@
                     <li class="nav-item active" style="margin-left: 30px"><a class="nav-link" href="index.jsp"><h4>Home</h4></a></li>
                     <li class="nav-item" style="margin-left: 30px"><a class="nav-link" href="login.jsp" ><h4>Login</h4></a></li>            
                     <li class="nav-item" style="margin-left: 30px"><a class="nav-link" href="MainController?btAction=Courses" ><h4>Courses</h4></a></li>   
-                    <li class="nav-item" style="margin-left: 30px"><a class="nav-link" href="MainController?btAction=ViewCart" ><h4>View cart<span class="badge badge-danger">
+                    <li class="nav-item" style="margin-left: 30px"><a class="nav-link" href="MainController?btAction=ViewCart" ><h4>View cart<span class="badge badge-danger" style="margin-left: 5px">
                                     <%                                    if (session.getAttribute("listCartSession") != null) {
                                             listCartSession = (List<CartDTO>) session.getAttribute("listCartSession");
                                     %><%=listCartSession.size()%><%
                                     } else {
                                     %><%= 0%><%
-                                           }
+                                        }
                                     %>
 
 
                                 </span></h4></a></li>   
-                                <%
-                                    boolean haveLogin = false;
-                                    if (session.getAttribute("haveLogin") != null) {
-                                        haveLogin = (boolean) session.getAttribute("haveLogin");
-                                    }
-                                    if (haveLogin) {
-                                %><li class="nav-item" style="margin-left: 30px"><a class="nav-link" href="MainController?btAction=Logout"><h4>Logout</h4></a></li><%
-                                    }
-                        %>
+                                
+                                <%if (haveLogin) {
+                                %>
+                                    <li class="nav-item" style="margin-left: 30px"><h4 class="nav-link">Welcome, <%=fullname%> | </h4></li>
+                                    <li class="nav-item" style="margin-left: 30px"><a class="nav-link"  href="MainController?btAction=Logout"><h4>Logout</h4></a></li><%
+                        }%>
+
 
                 </ul>
 
@@ -92,6 +96,7 @@
                     <input class="btn btn-outline-success my-2 my-sm-0" type="submit" value="Search" name="btAction" >
                 </form>
             </nav>
+                        <i class="fa-duotone fa-cart-shopping-fast"></i>
         </header>
         <%
             }

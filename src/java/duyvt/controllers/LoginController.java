@@ -48,21 +48,23 @@ public class LoginController extends HttpServlet {
             AccountsDAO dao = new AccountsDAO();
             boolean result = dao.checkLogin(userID, password);
             boolean checkHaveLogin = result;
-            HttpSession session = request.getSession(true);
+            
             if (result) {
                 AccountsDTO acc = dao.getAccounts();
-                
+                HttpSession session = request.getSession(true);
+                session.setAttribute("fullname", acc.getFullname());
                 session.setAttribute("u", acc.getUserID());
                 session.setAttribute("p", acc.getPassword());
                 session.setAttribute("isAdminResult", acc.isIsAdmin());
+                session.setAttribute("haveLogin", checkHaveLogin);
                 
                 url = INDEXPAGE;
-                Cookie cookie = new Cookie(userID, password);
-                cookie.setMaxAge(60 * 3);
-                response.addCookie(cookie);
+//                Cookie cookie = new Cookie(userID, password);
+//                cookie.setMaxAge(60 * 3);
+//                response.addCookie(cookie);
 
             }
-            session.setAttribute("haveLogin", checkHaveLogin);
+//            
             response.sendRedirect(url);
 
         } catch (SQLException ex) {

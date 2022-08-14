@@ -9,7 +9,11 @@ import duyvt.DAO.CartDAO;
 import duyvt.DTO.CartDTO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -32,28 +36,27 @@ public class ViewCartController extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, SQLException, NamingException {
         response.setContentType("text/html;charset=UTF-8");
-        CartDAO dao = new CartDAO();
-        
+
         HttpSession session = request.getSession();
-        List<CartDTO> listCartSession = null;
-        if(session.getAttribute("listCartSession")!=null){
-            listCartSession = (List<CartDTO>) session.getAttribute("listCartSession");
-        }
-         
-        
-        double sum = 0;
-        sum = dao.getTotalCartPrice(listCartSession);
-        double discountTotal = 0;
-        discountTotal = dao.getTotalCartDiscount(listCartSession);
+        List<CartDTO> listCartSession = (List<CartDTO>) session.getAttribute("listCartSession");
+
+//        double sum = 0;
+//        sum = dao.getTotalCartPrice(listCartSession);
+//        double discountTotal = 0;
+//        discountTotal = dao.getTotalCartDiscount(listCartSession);
+        CartDAO dao = new CartDAO();
         double sumTotal = 0;
-        sumTotal = dao.getTotal(listCartSession);
-        session.setAttribute("sumTotal", sumTotal);
-        session.setAttribute("sum", sum);
-        session.setAttribute("discount", discountTotal);
-        response.sendRedirect("viewcart.jsp");
+        if(listCartSession!=null){
+           sumTotal = dao.getTotal(listCartSession); 
+        }
         
+        session.setAttribute("sumTotal", sumTotal);
+//        session.setAttribute("sum", sum);
+//        session.setAttribute("discount", discountTotal);
+        response.sendRedirect("viewcart.jsp");
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -68,7 +71,13 @@ public class ViewCartController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (SQLException ex) {
+            Logger.getLogger(ViewCartController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NamingException ex) {
+            Logger.getLogger(ViewCartController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -82,7 +91,13 @@ public class ViewCartController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (SQLException ex) {
+            Logger.getLogger(ViewCartController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NamingException ex) {
+            Logger.getLogger(ViewCartController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**

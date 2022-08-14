@@ -5,15 +5,22 @@
  */
 package duyvt.controllers;
 
+import duyvt.DAO.CoursesDAO;
 import duyvt.DAO.OrderDAO;
 import duyvt.DTO.CartDTO;
+import duyvt.DTO.CoursesDTO;
 import duyvt.DTO.OrderDTO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
+import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -36,7 +43,7 @@ public class ConfirmController extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, SQLException, NamingException, ParseException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -45,29 +52,56 @@ public class ConfirmController extends HttpServlet {
             HttpSession session = request.getSession();
             List<CartDTO> listCartSession = (List<CartDTO>) session.getAttribute("listCartSession");
             String userID = (String) session.getAttribute("u");
-
-            if (listCartSession != null && userID != null) {
-                for(CartDTO c:listCartSession){
-                    OrderDTO dto = new OrderDTO();
-                    dto.setOrderID(c.getCourses().getID());
-                    dto.setUserID(userID);
-                    dto.setDate(new java.util.Date(date.getTime()));
-                    dto.setQuantity(c.getQuantity());
-                    dto.setTotal(100);
-                    
-                    OrderDAO dao = new OrderDAO();
-                    boolean result = dao.insertOrder(dto);
-                    if(!result){
+            boolean check = true;
+            if (listCartSession != null) {
+                for (CartDTO c : listCartSession) {
+                    if (c.getCourses().getQuantity() <= c.getQuantity()) {
+                        check = false;
                         break;
                     }
                 }
-                listCartSession.clear();
-                response.sendRedirect("index.jsp");
+                for (CartDTO c : listCartSession) {
+                    if (c.getCourses().getQuantity() <= c.getQuantity()) {
+                        out.print("The <strong>" + c.getCourses().getName() + "</strong> course is out of stock! or you buy overload courses of the store!<a href='MainController?btAction=ViewCart'>Try again!</a><br>");
+                    }
+                }
+            }
+            if (listCartSession != null && userID != null) {
+                for (CartDTO c : listCartSession) {
+                    OrderDTO dto = new OrderDTO();
+                    dto.setOrderID(OrderDAO.setOrderID());
+                    dto.setUserID(userID);
+                    dto.setCourseID(c.getCourses().getID());
+                    dto.setDate(new java.sql.Date(date.getTime()));
+                    dto.setQuantity(c.getQuantity());
+                    dto.setTotal(c.getCourses().getTuitionFee() * c.getQuantity());
+
+                    OrderDAO dao = new OrderDAO();
+                    boolean result = false;
+
+                    if (c.getCourses().getQuantity() >= c.getQuantity() && check == true) {
+                        result = dao.insertOrder(dto);
+                    }
+
+                    if (result) {
+                        CoursesDAO coursesDAO = new CoursesDAO();
+                        boolean rs = coursesDAO.updateQuantityCourse(c.getCourses().getID(), c.getCourses().getQuantity() - c.getQuantity());
+                    }
+
+                }
+                if (check) {
+                    listCartSession.clear();
+                    out.print("You order success! <a href='index.jsp'>Come back home</a>");
+                }
             } else {
                 if (userID == null) {
                     response.sendRedirect("login.jsp");
+                } else {
+                    response.sendRedirect("MainController?btAction=ViewCart");
                 }
+
             }
+
         }
     }
 
@@ -83,7 +117,15 @@ public class ConfirmController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (SQLException ex) {
+            Logger.getLogger(ConfirmController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NamingException ex) {
+            Logger.getLogger(ConfirmController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(ConfirmController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -97,7 +139,15 @@ public class ConfirmController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (SQLException ex) {
+            Logger.getLogger(ConfirmController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NamingException ex) {
+            Logger.getLogger(ConfirmController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(ConfirmController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**

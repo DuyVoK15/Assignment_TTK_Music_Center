@@ -5,15 +5,16 @@
  */
 package duyvt.controllers;
 
-import duyvt.DAO.AccountsDAO;
+import duyvt.DAO.OrderDAO;
+import duyvt.DTO.OrderDTO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.NamingException;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,7 +24,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author ASUS
  */
-public class LogoutController extends HttpServlet {
+public class ViewOrderController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,18 +39,12 @@ public class LogoutController extends HttpServlet {
             throws ServletException, IOException, SQLException, NamingException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-
-//            Cookie[] cookies = request.getCookies();
-//            if (cookies != null) {
-//                for (Cookie cookie : cookies) {
-//                    cookie.setMaxAge(0);
-//                    response.addCookie(cookie);
-//                }
-//            }
             HttpSession session = request.getSession();
-            session.invalidate();
-            response.sendRedirect("index.jsp");
+//            String userID = (String) session.getAttribute("u");
+            OrderDAO dao = new OrderDAO();
+            List<OrderDTO> listO = dao.listOrders();
+            request.setAttribute("listO", listO);
+            request.getRequestDispatcher("vieworder.jsp").forward(request, response);
         }
     }
 
@@ -68,9 +63,9 @@ public class LogoutController extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (SQLException ex) {
-            Logger.getLogger(LogoutController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ViewOrderController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NamingException ex) {
-            Logger.getLogger(LogoutController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ViewOrderController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -88,9 +83,9 @@ public class LogoutController extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (SQLException ex) {
-            Logger.getLogger(LogoutController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ViewOrderController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NamingException ex) {
-            Logger.getLogger(LogoutController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ViewOrderController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

@@ -60,6 +60,10 @@
         <servlet-name>ConfirmController</servlet-name>
         <servlet-class>duyvt.controllers.ConfirmController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ViewOrderController</servlet-name>
+        <servlet-class>duyvt.controllers.ViewOrderController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>MainController</servlet-name>
         <url-pattern>/MainController</url-pattern>
@@ -119,6 +123,10 @@
     <servlet-mapping>
         <servlet-name>ConfirmController</servlet-name>
         <url-pattern>/ConfirmController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewOrderController</servlet-name>
+        <url-pattern>/ViewOrderController</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

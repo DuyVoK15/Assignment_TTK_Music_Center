@@ -130,7 +130,8 @@ public class CoursesDAO {
         return list;
     }
 
-    public void searchCourses(String textSearch, String searchBy) throws SQLException, NamingException {
+    public List<CoursesDTO> searchCourses(String textSearch, String searchBy, int index) throws SQLException, NamingException {
+        List<CoursesDTO> list = new ArrayList<>();
         Connection con = null;
         PreparedStatement stm = null;
         ResultSet rs = null;
@@ -138,19 +139,22 @@ public class CoursesDAO {
             //1. Open connection
             con = DBUtils.makeConnection();
             //2. Create SQL string
-            String sql = "SELECT TOP(20) ID, name, imgPath, description, tuitionFee, startDate, endDate, category, status, quantity\n"
+            String sql = "SELECT ID, name, imgPath, description, tuitionFee, startDate, endDate, category, status, quantity\n"
                     + "FROM [dbo].[duyvt.se150730.Courses]\n";
 
             if (searchBy.equalsIgnoreCase("byName")) {
                 sql = sql + "WHERE name LIKE ? AND status = 1 AND quantity > 0\n"
-                        + "ORDER BY startDate";
+                        + "ORDER BY startDate\n"
+                        + "OFFSET ? ROWS FETCH NEXT 4 ROWS ONLY;";
             } else {
                 sql = sql + "WHERE category LIKE ? AND status = 1 AND quantity > 0\n"
-                        + "ORDER BY startDate";
+                        + "ORDER BY startDate\n"
+                        + "OFFSET ? ROWS FETCH NEXT 4 ROWS ONLY;";
             }
             //3. Create repare statement
             stm = con.prepareStatement(sql);
             stm.setString(1, "%" + textSearch + "%");
+            stm.setInt(2, (index-1)*4);
             rs = stm.executeQuery();
             while (rs.next()) {
                 int ID = rs.getInt("ID");
@@ -164,10 +168,10 @@ public class CoursesDAO {
                 boolean status = rs.getBoolean("status");
                 int quantity = rs.getInt("quantity");
                 CoursesDTO dto = new CoursesDTO(ID, name, imgPath, description, tuitionFee, startDate, endDate, category, status, quantity);
-                if (listCourses == null) {
-                    listCourses = new ArrayList<>();
+                if (list == null) {
+                    list = new ArrayList<>();
                 }
-                listCourses.add(dto);
+                list.add(dto);
             }
         } finally {
             if (rs != null) {
@@ -180,6 +184,46 @@ public class CoursesDAO {
                 con.close();
             }
         }
+        return list;
+    }
+    
+    public int getTotalCoursesSearch(String textSearch, String searchBy) throws SQLException, NamingException {
+
+        Connection con = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+
+        try {
+            //1. Open connection
+            con = DBUtils.makeConnection();
+            //2. Create SQL string
+            String sql = "SELECT COUNT(*)"
+                    + "FROM [dbo].[duyvt.se150730.Courses]\n";
+
+            if (searchBy.equalsIgnoreCase("byName")) {
+                sql = sql + "WHERE name LIKE ? AND status = 1 AND quantity > 0";
+            } else {
+                sql = sql + "WHERE category LIKE ? AND status = 1 AND quantity > 0";
+            }
+            stm = con.prepareStatement(sql);
+            stm.setString(1, "%" + textSearch + "%");
+            rs = stm.executeQuery();
+            while (rs.next()) {
+                return rs.getInt(1);
+            }
+
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+        return 0;
     }
 
     public int getTotalCoursesManage() throws SQLException, NamingException {
@@ -373,4 +417,37 @@ public class CoursesDAO {
         return dto;
     }
     
+    public boolean updateQuantityCourse(int ID, int quantity) throws SQLException, NamingException, ParseException {
+        Connection con = null;
+        PreparedStatement stm = null;
+        try {
+            //Open connection 
+            con = DBUtils.makeConnection();
+            //2.Tao chuoi ket noi/Create sql string
+            String sql = "UPDATE [dbo].[duyvt.se150730.Courses]\n"
+                    + "SET [quantity] = ?\n"
+                    + "WHERE ID = ?";
+            //3.Prepared stm
+            stm = con.prepareStatement(sql);
+            // thêm
+            
+            stm.setInt(1, quantity);
+            stm.setInt(2, ID);
+            //4.Excecute query
+            int row = stm.executeUpdate();
+            if (row > 0) {
+                return true;
+            }
+
+        } finally {
+            if (stm != null) {
+                con.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+        return false;
+
+    }
 }
